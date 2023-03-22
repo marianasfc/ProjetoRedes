@@ -1,0 +1,73 @@
+body {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 20vh 1fr 7vh;
+    background: #34495e;
+    font: normal 300 18px "Roboto", sans-serif;
+}
+
+header {
+    background-color: #b3d9ff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    padding: 5vh;
+}
+
+header.h1{
+    font-style: Arial, Helvetica, sans-serif;
+}
+
+
+main {
+    padding: 5vw;
+}
+
+footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+div#novos {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 5ch;
+}
+
+div.botoes {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2ch;
+}
+
+div.conteudo, h5 {
+    min-width: 50vw;
+    list-style-type: none;
+    background-color: whitesmoke;
+    padding: 0.5ch 1ch;
+    margin-bottom: 1ch;
+    display: flex;
+    
+    justify-content: space-between; 
+}
+
+div.left{
+    float: left;
+      width: 50%;
+      text-align: center;
+}
+
+h5 {
+    margin-top: 3ch;
+}
+
+
+

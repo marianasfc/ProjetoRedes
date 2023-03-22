@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <h3>Edita Tópico</h3>
+
+<form action="{% url 'core:edita_topico' topico_id %}" method="POST">
+    {% csrf_token %}
+
+    <table>
+        {{topico_form}}
+    </table>
+    
+    <input type="submit" class="btn btn-success  btn-sm" value="Guardar">
+    <a href="{% url 'core:apaga_topico' topico_id %}" class="btn btn-outline-danger btn-sm">Apagar</a>
+</form>
+
+{% endblock main %}
+
+</body>
+
+</html>

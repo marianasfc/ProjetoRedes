@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <h3>Novo Tópico</h3>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <table>
+        {{topico_form}}
+    </table>
+    
+    <input type="submit" value="Gravar">
+</form>
+
+{% endblock main %}
+
+</body>
+
+</html>

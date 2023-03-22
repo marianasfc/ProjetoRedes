@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <h3>Novo Conteúdo</h3>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <table>
+        {{conteudo_form}}
+    </table>
+    
+    <input type="submit" value="Gravar">
+</form>
+
+{% endblock main %}
+
+</body>
+
+</html>

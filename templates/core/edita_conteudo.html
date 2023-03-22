@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block style %}
+    <style>
+        
+
+    </style>
+
+{% endblock style %}
+
+{% block main %}
+
+    <h3>Edita Conteúdo</h3>
+
+<form action=" {% url 'core:edita_conteudo' conteudo_id %}" method="POST">
+    {% csrf_token %}
+
+    <table>
+        {{conteudo_form}}
+    </table>
+    <div class="botoes">
+        <a href="{% url 'core:apaga_conteudo' conteudo_id %}" class="btn btn-outline-danger btn-sm">Apagar</a>    
+        <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
+    </div>    
+</form>
+
+{% endblock main %}
+
+</body>
+
+</html>
