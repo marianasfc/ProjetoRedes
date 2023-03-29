@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Topico, Conteudo, Conversor, Limite
+from .models import Topico, Conteudo, Conversor, Nyquist, Shannon, Meios
 
 
 class TopicoForm(ModelForm):
@@ -15,9 +15,19 @@ class ConteudoForm(ModelForm):
 class ConversorForm(ModelForm):
     class Meta:
         model = Conversor
-        fields = '__all__'
+        fields = '__all__' 
 
-class LimiteForm(ModelForm):
+class NyquistForm(ModelForm):
     class Meta:
-        model = Limite
-        fields = '__all__'       
+        model = Nyquist
+        fields = '__all__'    
+
+class ShannonForm(ModelForm):
+    class Meta:
+        model = Shannon
+        fields = '__all__'   
+
+class MeiosForm(ModelForm):
+    class Meta:
+        model = Meios
+        fields = '__all__' 

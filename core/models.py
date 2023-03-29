@@ -22,7 +22,19 @@ class Conversor(models.Model):
     def __str__(self):
         return f'{self.tipo}'
 
-class Limite(models.Model):
+class Nyquist(models.Model):
+    tipo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.tipo}'
+
+class Shannon(models.Model):
+    tipo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.tipo}'
+
+class Meios(models.Model):
     tipo = models.CharField(max_length=50)
 
     def __str__(self):

@@ -150,14 +150,35 @@ def convertemWdBW(original):
     return string
 
 def calculateNyquist(b, v):
+    b = int (b)
+    v = int (v)
     b = b * (10**6)  # convertendo MHz para Hz
     resultado = b * v * math.log2(v)
     string = str(resultado)
     return "Debito:" + string
 
 def calculateShannon(snr, b):
+    b = int (b)
+    v = int (v)
     b = b * (10**6)  # convertendo MHz para Hz
     snr = 10 ** (snr / 10)  # convertendo SNR de dB para escala linear
     resultado = b * math.log2(1 + snr)
     string = str(resultado)
-    return string
+    return "Capacidade" + string
+
+def qam(bandwidth, Eb_No, BER):
+    best_modulation = None
+    max_rate = 0
+    Eb_No = 10 **(Eb_No / 10)
+    for M in [4, 8, 16, 32, 64, 128, 256]:
+        k = int (k)
+        pb = int (pb)
+        k = math.log2(M)
+        pb = 4*k*(1 - 1/math.sqrt(M))*math.erfc(math.sqrt(3*k**2*(M-1)*Eb_No/2))
+        rate = bandwidth * k * math.log2(1 + (1/pb))
+        if pb <= BER and rate > max_rate:
+            best_modulation = M
+            max_rate = rate
+    print(f'A melhor modulação é QAM-{best_modulation} com uma taxa máxima de {max_rate} bps')
+    return best_modulation, max_rate
+    

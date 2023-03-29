@@ -1,28 +1,54 @@
 {% extends "layout.html" %}
 
 {% block style %}
-    <style>
-        p{
-            width: 100%;
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-       }
+<style>
+    article {
+        color: white;
+    }
 
-    </style>
+    article .img {
+        align-content: flex-end;
+    }
+
+    .esquerda {
+        float: left;
+        width: 50%;
+        text-align: left;
+        margin-top: 100px;
+    }
+
+    .direita {
+        float: left;
+        width: 50%;
+        text-align: center;
+    }
+</style>
 
 {% endblock style %}
-    
-    
-    {% block main %}  
 
-        <p style="color: white;">Este website congrega conteúdos desenvolvidos na UC de Complementos de Redes.</p>
-        <p style="color: white;">Tais como o desenvolvimento de uma página Web em Django e html.</p>
-        <p style="color: white;">Procura também ser um meio para guardar a informação transmitida em aula, tais como os temas abordados dos tópicos.</p>
-        {% load static %}
-        <img src="{% static 'core\fundo.png' %}" width="300px" alt="">
-       
-    {% endblock main %}    
-         
-    
+{% block main %}
+<div class="blocomain">
+    <div class="esquerda">
+        <article>
+            <p>Este website congrega conteúdos desenvolvidos na UC de Complementos de Redes.</p>
+            <p>Tais como o desenvolvimento de uma página Web em Django e html.</p>
+            <p>Procura também ser um meio para guardar a informação transmitida em aula, tais como os temas abordados
+                dos tópicos.</p>
+        </article>
+    </div>
+
+    <div class="direita">
+        <article>
+            {% load static %}
+            <img src="{% static 'core\redes.jpeg' %}" width="500px" alt="">
+        </article>
+    </div>
+</div>
+
+
+
+{% endblock main %}
+
+</body>
+
 </html>

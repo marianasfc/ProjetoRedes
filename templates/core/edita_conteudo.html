@@ -1,10 +1,23 @@
 {% extends "layout.html" %}
 
 {% block style %}
-    <style>
-        
+<style>
+    .caixa{
+        width: 100%;
+        padding: 15px;
+        background: #f0f0f5;
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    } 
+    
+    h3{
+        color: white;
+    }
 
-    </style>
+</style>
 
 {% endblock style %}
 
@@ -12,17 +25,21 @@
 
     <h3>Edita Conteúdo</h3>
 
-<form action=" {% url 'core:edita_conteudo' conteudo_id %}" method="POST">
-    {% csrf_token %}
+    <div>
+        <form action=" {% url 'core:edita_conteudo' conteudo_id %}" method="POST">
+            {% csrf_token %}
 
-    <table>
-        {{conteudo_form}}
-    </table>
-    <div class="botoes">
-        <a href="{% url 'core:apaga_conteudo' conteudo_id %}" class="btn btn-outline-danger btn-sm">Apagar</a>    
-        <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
-    </div>    
-</form>
+            <table>
+                {{conteudo_form}}
+            </table>
+            <div class="botoes">
+                <a href="{% url 'core:apaga_conteudo' conteudo_id %}" class="btn btn-outline-danger btn-sm">Apagar</a>    
+                <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
+            </div>    
+        </form>
+
+    </div>
+
 
 {% endblock main %}
 
