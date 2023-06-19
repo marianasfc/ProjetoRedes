@@ -152,6 +152,7 @@
             <div class="c">
                 <h2>Calculadora</h2>
                 <form>
+                    {%csrf_token%}
                     <label>Largura de banda (B) [MHz]: <input type="number" name="bandwidth"></label>
                     <br>
                     <label>Eb/No [dB]: <input type="number" name="Eb_No"></label>

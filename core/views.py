@@ -1,11 +1,16 @@
 from django.shortcuts import redirect, render
 from .models import Topico, Conteudo, Conversor
 from .forms import TopicoForm, ConteudoForm, ConversorForm
-from .funcoes import calculateNyquist, calculateShannon, conversor, qam
+import seaborn as sns
+import os
+from .funcoes import calculateNyquist, calculateShannon, conversor, plot_heatmap_ci, plot_relacao_ci, plot_variacao_atenuacao, qam, cria_matriz, calcula_matriz_prx, calcula_matriz_espaco_livre, grafico, dadosPlo, espaco_livre, calcular_heatmap_potencia
 
 # Create your views here.
 def index_view(request):
     return render(request, 'core/index.html')
+
+def aspetos_view(request):
+    return render(request, 'core/aspetos.html')
 
 
 def topicos_view(request):
@@ -56,6 +61,109 @@ def shannon_view(request):
 
     return render(request, 'core/shannon.html', context)
 
+def meios_view(request):
+    return render(request, 'core/meios.html')
+
+def sinais_view(request):
+    return render(request, 'core/sinais.html')
+
+def mpsk_view(request):
+    return render(request, 'core/mpsk.html')
+
+def mqam_view(request):
+    resultado = "Resultado"
+    if request.method == "POST":
+        b = request.POST['b']
+        db = request.POST['db']
+        ber = request.POST['ber']
+        resultado = qam(b, db, ber)
+    context = {
+        'resultado': resultado
+    }
+    return render(request, 'core/mqam.html', context)
+
+def modulacoes_view(request):
+    return render(request, 'core/modulacoes.html')
+
+def aspetos_view(request):
+    if os.path.exists('static/core/grafico1.png'):
+        os.remove('static/core/grafico1.png')
+    if os.path.exists('static/core/grafico2.png'):
+        os.remove('static/core/grafico2.png')   
+    x_area = 100
+    y_area = 100
+    d_pixel = 1
+    i_centro = 50
+    j_centro = 50
+    resultado = "Resultado"
+    resultado1 = "Resultado1"
+    matriz = cria_matriz(x_area, y_area, d_pixel)
+    if request.method == "POST":
+        ptx= request.POST['ptx']
+        f = request.POST['f']
+        d = request.POST['d']
+        s = request.POST['s']
+        prx = calcula_matriz_espaco_livre(d,f,ptx)
+        matriz_ptx = calcula_matriz_prx(matriz, prx, f, calcula_matriz_espaco_livre, i_centro, j_centro, d_pixel)
+        resultado = grafico(matriz_ptx)
+        resultado1 = espaco_livre(ptx, f, d, s)
+    context = {
+        'resultado': resultado,
+        'resultado1': resultado1
+    }
+    return render(request, 'core/aspetos.html', context)
+
+def cenario_view(request):
+    resultado = dadosPlo()
+    context = {
+        'resultado': resultado
+    }
+    return render(request, 'core/cenario.html', context)
+
+def diagrama_view(request):
+    if os.path.exists('static/core/grafico3.png'):
+        os.remove('static/core/grafico3.png')
+    resultado = "Resultado"
+    if request.method == "POST":
+        ptx= request.POST['ptx']
+        f = request.POST['f']
+        mod = request.POST['mod']
+        largura = request.POST['largura']
+        altura = request.POST['altura']
+        resultado = calcular_heatmap_potencia(ptx, f, mod, largura, altura, tamanho_pixel=10,
+                              antena='Omni', azimute_antena=0, altura_antena=20, altura_terminal=1.5)
+    context = {
+        'resultado': resultado
+    }
+    return render(request, 'core/diagrama.html', context)
+
+def planeamento_view(request):
+    if os.path.exists('static/core/grafico5.png'):
+        os.remove('static/core/grafico5.png')
+    resultado = "Resultado"
+    if request.method == "POST":
+        d = request.POST['d']
+        f = request.POST['f']
+        ptx= request.POST['ptx']
+        resultado = plot_variacao_atenuacao(d, f, int(ptx))
+    context = {
+        'resultado': resultado
+    }
+    return render(request, 'core/planeamento.html', context)
+
+def plan2_view(request):
+    resultado = plot_relacao_ci()
+    context = {
+        'resultado': resultado
+    }
+    return render(request, 'core/plan2.html', context)
+
+def plan3_view(request):
+    resultado = plot_heatmap_ci()
+    context = {
+        'resultado': resultado
+    }
+    return render(request, 'core/plan3.html', context)
 
 def edita_topicos_view(request):
 
@@ -125,28 +233,4 @@ def apaga_conteudo_view(request, conteudo_id):
     conteudo.delete()
     return redirect('core:edita_topicos')
 
-def meios_view(request):
-    return render(request, 'core/meios.html')
 
-def sinais_view(request):
-    return render(request, 'core/sinais.html')
-
-def mpsk_view(request):
-    
-
-    return render(request, 'core/mpsk.html')
-
-def mqam_view(request):
-    resultado = "Resultado"
-    if request.method == "POST":
-        b = request.POST['b']
-        db = request.POST['db']
-        ber = request.POST['ber']
-        resultado = qam(b, db, ber)
-    context = {
-        'resultado': resultado
-    }
-    return render(request, 'core/mqam.html', context)
-
-def modulacoes_view(request):
-    return render(request, 'core/modulacoes.html')

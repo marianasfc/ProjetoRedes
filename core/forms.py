@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Topico, Conteudo, Conversor, Nyquist, Shannon, Meios
+from .models import Topico, Conteudo, Conversor, Nyquist, Shannon, Meios, Aspetos, Planeamento, Diagrama
 
 
 class TopicoForm(ModelForm):
@@ -30,4 +30,14 @@ class ShannonForm(ModelForm):
 class MeiosForm(ModelForm):
     class Meta:
         model = Meios
+        fields = '__all__' 
+
+class AspetosForm(ModelForm):
+    class Meta:
+        model = Aspetos
+        fields = '__all__' 
+
+class PlaneamentoForm(ModelForm):
+    class Meta:
+        model = Aspetos
         fields = '__all__' 

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block style %}
+<style>
+    h1 {
+        width: 100%;
+        padding: 15px;
+        background: #f0f0f5;
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #34495e;
+    }
+
+    img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+        margin-left: 200px;
+    }
+
+</style>
+
+{% endblock style %}
+
+
+{% block main %}
+
+<body>
+    <div>
+        <h1>Planemaneto Celular</h1>
+        <div>
+            {% load static %}
+            <img src="{% static 'core/grafico6.png' %}" alt="">
+        </div>
+</body>
+{% endblock main %}

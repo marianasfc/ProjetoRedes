@@ -54,6 +54,21 @@
                         <a href="{% url 'core:mqam' %}">M-QAM</a></a>
                     </div>
                 </div>
+                <a href="{% url 'core:aspetos' %}" class="btn">Aspetos de propagação</a>
+                <a href="{% url 'core:cenario' %}" class="btn">Campanha de medidas</a>
+                <a href="{% url 'core:diagrama' %}" class="btn">Diagrama</a>
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Planeamento Celular
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'core:planeamento' %}" class="btn">Cobertura</a>
+                        <a href="{% url 'core:plan2' %}" class="btn">Planeamento Celular1</a>
+                        <a href="{% url 'core:plan3' %}" class="btn">Planeamento Celular2</a>
+                    </div>
+                </div>
+                
             </nav>
         </div>
 

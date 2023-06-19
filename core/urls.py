@@ -7,6 +7,12 @@ app_name = 'core'
 
 urlpatterns = [
     path("", views.index_view, name='index'),
+    path("aspetos/", views.aspetos_view, name='aspetos'),
+    path("cenario/", views.cenario_view, name='cenario'),
+    path("diagrama/", views.diagrama_view, name='diagrama'),
+    path("planeamento/", views.planeamento_view, name='planeamento'),
+    path("plan2/", views.plan2_view, name='plan2'),
+    path("plan3/", views.plan3_view, name='plan3'),
     path("topicos/", views.topicos_view, name='topicos'),
     path("Conversor/", views.conversor_view, name='conversor'),
     path("nyquist/", views.nyquist_view, name='nyquist'),
