@@ -3,7 +3,7 @@ from .models import Topico, Conteudo, Conversor
 from .forms import TopicoForm, ConteudoForm, ConversorForm
 import seaborn as sns
 import os
-from .funcoes import calculateNyquist, calculateShannon, conversor, plot_heatmap_ci, plot_relacao_ci, plot_variacao_atenuacao, qam, cria_matriz, calcula_matriz_prx, calcula_matriz_espaco_livre, grafico, dadosPlo, espaco_livre, calcular_heatmap_potencia
+from .funcoes import calculateNyquist, calculateShannon, conversor, erlang_b_numero_canais, erlang_b_tráfego, plot_heatmap_ci, plot_relacao_ci, plot_variacao_atenuacao, plot_variacao_atenuacao_freq, qam, cria_matriz, calcula_matriz_prx, calcula_matriz_espaco_livre, grafico, dadosPlo, espaco_livre, calcular_heatmap_potencia, erlang_b_probabilidade_bloqueio
 
 # Create your views here.
 def index_view(request):
@@ -11,7 +11,6 @@ def index_view(request):
 
 def aspetos_view(request):
     return render(request, 'core/aspetos.html')
-
 
 def topicos_view(request):
 
@@ -22,7 +21,6 @@ def topicos_view(request):
     }
 
     return render(request, 'core/topicos.html', context)
-
 
 def conversor_view(request):
     resultado = "Resultado"
@@ -142,28 +140,72 @@ def planeamento_view(request):
         os.remove('static/core/grafico5.png')
     resultado = "Resultado"
     if request.method == "POST":
-        d = request.POST['d']
+        c = request.POST['c']
         f = request.POST['f']
-        ptx= request.POST['ptx']
-        resultado = plot_variacao_atenuacao(d, f, int(ptx))
+        resultado = plot_variacao_atenuacao_freq(f,c)
     context = {
         'resultado': resultado
     }
     return render(request, 'core/planeamento.html', context)
 
 def plan2_view(request):
-    resultado = plot_relacao_ci()
+    if os.path.exists('static/core/grafico8.png'):
+        os.remove('static/core/grafico8.png')
+    resultado = "Resultado"
+    if request.method == "POST":
+        f = request.POST['f']
+        resultado = plot_variacao_atenuacao(f)
     context = {
         'resultado': resultado
     }
     return render(request, 'core/plan2.html', context)
 
 def plan3_view(request):
+    if os.path.exists('static/core/grafico7.png'):
+        os.remove('static/core/grafico7.png')
+    resultados1 = plot_relacao_ci()  
     resultado = plot_heatmap_ci()
     context = {
-        'resultado': resultado
+        'resultado': resultado,
+        'resultados1': resultados1
     }
     return render(request, 'core/plan3.html', context)
+
+def trafego_view(request):
+    return render(request, 'core/trafego.html')
+
+def erlangB_view(request):
+    resultado = "Resultado"
+    if request.method == "POST":
+        t= request.POST['t']
+        c = request.POST['c']
+        resultado = erlang_b_probabilidade_bloqueio(t, c)
+    context = {
+        'resultado': resultado,
+    }
+    return render(request, 'core/erlangB.html', context)
+
+def canais_view(request):
+    resultado = "Resultado"
+    if request.method == "POST":
+        t= request.POST['t']
+        pb = request.POST['pb']
+        resultado = erlang_b_numero_canais(t, pb)
+    context = {
+        'resultado': resultado,
+    }
+    return render(request, 'core/canais.html', context)
+
+def calctraf_view(request):
+    resultado = "Resultado"
+    if request.method == "POST":
+        tc= request.POST['tc']
+        dm = request.POST['dm']
+        resultado = erlang_b_tráfego(tc, dm)
+    context = {
+        'resultado': resultado,
+    }
+    return render(request, 'core/calctraf.html', context)
 
 def edita_topicos_view(request):
 

@@ -316,62 +316,104 @@ def calcular_potencia_recebida(distancia, ganho_antena, ptx):
     potencia_recebida = 10 * np.log10(ptx) + ganho_antena - 20 * np.log10(distancia)
     return potencia_recebida
 
-def calcular_heatmap_potencia(ptx, f, modelo_propagacao, largura_cenario=1000, altura_cenario=1000, tamanho_pixel=10,
-                              antena='Omni', azimute_antena=0, altura_antena=20, altura_terminal=1.5):
-    # Inicializar matriz para armazenar os valores da potência recebida
-    matriz_potencia = np.zeros((int(largura_cenario / tamanho_pixel), int(altura_cenario / tamanho_pixel)))
+def fator_antena(angulo_rad, azimute_rad):
+    fator = math.cos(int(angulo_rad)) * math.cos(int(azimute_rad))
+    return fator
 
-    # Diagrama de radiação da antena (valores fictícios)
-    angulos = np.linspace(0, 2 * np.pi, 100)
-    ganhos_horizontal = np.zeros(100)
-    ganhos_vertical = np.zeros(100)
+def obter_diagrama_radiacao_antena(antena, azimute_antena):
+    if antena == 'Antena Padrão':
+        ganhos = {
+            0: 10.0,
+            90: 8.0,
+            180: 5.0
+        }
+    elif antena == 'Antena Especial':
+        ganhos = {
+            0: 12.0,
+            90: 10.0,
+            180: 7.0
+        }
+    else:
+        ganhos = {}  
+    return ganhos.get(azimute_antena, 0.0)
 
-    # Calcular a potência recebida em cada ponto do cenário
-    for i in range(int(largura_cenario / tamanho_pixel)):
-        for j in range(int(altura_cenario / tamanho_pixel)):
-            x = i * tamanho_pixel + tamanho_pixel / 2  # Coordenada x do centro do pixel
-            y = j * tamanho_pixel + tamanho_pixel / 2  # Coordenada y do centro do pixel
-
-            # Calcular a distância entre o ponto no cenário e a antena
-            distancia = np.sqrt((x - largura_cenario / 2) ** 2 + (y - altura_cenario / 2) ** 2)
-
-            # Calcular a potência recebida utilizando o modelo de propagação escolhido
-            if modelo_propagacao == 'Friis':
-                potencia_recebida = calcular_potencia_recebida(distancia, ganho_antena)
-            else:
-                # Outros modelos de propagação
-                # Implementar os cálculos correspondentes
-            # Armazenar a potência recebida na matriz
-                matriz_potencia[i, j] = potencia_recebida
+def calcular_heatmap_potencia(ptx, f, modelo_propagacao, largura=1000, altura=1000, tamanho_pixel=10,
+                              antena='Antena Padrão', azimute_antena=0, altura_antena=20, altura_terminal=1.5):
+    # Cálculo do número de pixels
+    potencia_recebida = 0
+    num_pixels_largura = int(largura) / int(tamanho_pixel)
+    num_pixels_altura = int(altura) / int(tamanho_pixel)
+    # Criação da matriz para o heatmap da potência recebida
+    heatmap = np.zeros((int(num_pixels_altura), int(num_pixels_largura)))
+    # Cálculo do diagrama de radiação da antena
+    diagrama_radiacao = obter_diagrama_radiacao_antena(antena, azimute_antena)
+    # Loop para calcular a potência recebida em cada pixel
+    for i in range(int(num_pixels_altura)):
+        for j in range(int(num_pixels_largura)):
+            # Cálculo da distância do pixel à antena
+            distancia = np.sqrt((i * int(tamanho_pixel))**2 + (j * int(tamanho_pixel))**2)
+            # Cálculo da potência recebida no pixel
+            if modelo_propagacao == 'Apenas Horizontal':
+                # Cálculo considerando apenas o diagrama de radiação horizontal
+                potencia_recebida = int(ptx) / (4 * np.pi * distancia)**2
+            elif modelo_propagacao == 'Horizontal e Vertical':
+                # Cálculo considerando o diagrama de radiação horizontal e vertical
+                angulo_rad = np.arctan2(int(altura_terminal) - int(altura_terminal), distancia)
+                azimute_rad = np.arctan2(j * int(tamanho_pixel), i * int(tamanho_pixel))
+                potencia_recebida = int(ptx) / (4 * np.pi * distancia)**2 * fator_antena(angulo_rad, azimute_rad)
+            # Armazenamento da potência recebida no heatmap
+            heatmap[i, j] = potencia_recebida
+            heatmap = np.reshape(heatmap, (int(num_pixels_altura), int(num_pixels_largura)))
     # Plotar o heatmap da potência recebida
-    plt.imshow(matriz_potencia, cmap='jet', extent=[0, largura_cenario, 0, altura_cenario])
+    plt.imshow(heatmap, cmap='jet', extent=[0, int(largura), 0, int(altura)])
     plt.colorbar(label='Potência Recebida (dBm)')
     plt.xlabel('Distância (m)')
     plt.ylabel('Distância (m)')
     plt.title('Heatmap da Potência Recebida no Cenário')
-    # Exibir o plot
     figura = plt.gcf()
     plt.close()
     figura.savefig('static/core/grafico3.png')
                           
-
-def plot_variacao_atenuacao(d, f, ptx):
-    if os.path.exists('static/core/grafico5.png'):
-        os.remove('static/core/grafico5.png')
-    distancias = range(1, int(d) + 1)  # Intervalo de distâncias
-    atenuacoes = []  # Lista para armazenar as atenuações
-    for distancia in distancias:
-        atenuacao1 = atenuacao(distancia, f, ptx)  # Calcula a atenuação para cada distância
-        atenuacoes.append(atenuacao1)
-    plt.plot(distancias, atenuacoes, label=f"{f} MHz")
-    plt.xlabel('Distância (m)')
-    plt.ylabel('Atenuação (dB)')
-    plt.title('Variação da Atenuação com Frequências')
+def plot_variacao_atenuacao_freq(frequencias, constante_atenuacao):
+    constante_atenuacao1 = 0
+    # Converter as frequências para uma lista de valores numéricos
+    frequencias = [int(f) for f in frequencias.split(",")]
+    # Definir a distância
+    distancia = np.linspace(1, 1000, 100)  # Exemplo: distância varia de 1 a 1000 metros
+    # Plotar as curvas de variação da atenuação
+    for freq in frequencias:
+        if constante_atenuacao == 'espaço livre':
+            constante_atenuacao1 = 2
+        elif constante_atenuacao == 'ambiente urbano':
+            constante_atenuacao1 = 3.3   
+        elif constante_atenuacao == 'indoor':
+            constante_atenuacao1 = 4
+        atenuacao = 20 * np.log10(distancia) + 20 * np.log10(freq) + constante_atenuacao1
+        plt.plot(distancia, atenuacao, label=f"{freq} MHz")
+    # Configurar o gráfico
+    plt.xlabel("Distância (metros)")
+    plt.ylabel("Atenuação (dB)")
     plt.legend()
     plt.grid(True)
     figura = plt.gcf()
     plt.close()
     figura.savefig('static/core/grafico5.png')
+
+def plot_variacao_atenuacao(frequencia):
+    atenuacoes = [2, 3.3, 4]
+    atenuacoes_name = ['espaço livre', 'ambiente urbano', 'indoor']
+    distancia = np.linspace(1, 1000, 100)  # Exemplo: distância varia de 1 a 1000 metros
+    for i in range(len(atenuacoes)):
+        atenuacao = 20 * np.log10(distancia) + 20 * np.log10(int(frequencia)) + atenuacoes[i]
+        plt.plot(distancia, atenuacao, label=f"n = {atenuacoes_name[i]}")
+    plt.xlabel("Distância (metros)")
+    plt.ylabel("Atenuação (dB)")
+    plt.legend()
+    plt.grid(True)
+    figura = plt.gcf()
+    plt.close()
+    figura.savefig('static/core/grafico8.png')
+
 
 def plot_relacao_ci():
     if os.path.exists('static/core/grafico6.png'):
@@ -390,7 +432,7 @@ def plot_relacao_ci():
 
 def plot_heatmap_ci():
     if os.path.exists('static/core/grafico7.png'):
-        os.remove('static/core/grafico6.png')
+        os.remove('static/core/grafico7.png')
     # Dados fictícios para o C/I
     padroes_celulares = ['GSM', 'UMTS', 'LTE', '5G']
     matriz_ci = np.random.rand(7, 7) * 30  # Matriz 7x7 com valores aleatórios de C/I
@@ -408,7 +450,29 @@ def plot_heatmap_ci():
     plt.gca().set_xticklabels([])  # Ocultar rótulos do eixo x
     plt.gca().set_yticklabels([])  # Ocultar rótulos do eixo y
     plt.gca().add_patch(plt.Rectangle((2.5, 2.5), 2, 2, fill=False, edgecolor=center_cell_color, linewidth=2))  # Desenhar retângulo para célula "útil"
-    plt.colorbar(label='C/I (dB)')
     figura = plt.gcf()
     plt.close()
     figura.savefig('static/core/grafico7.png')
+
+def erlang_b_probabilidade_bloqueio(tráfego, numero_canais):
+    soma = 0
+    for k in range(int(numero_canais) + 1):
+        soma += (int(tráfego) ** k) / math.factorial(k)
+    prob_bloqueio = ((int(tráfego) ** int(numero_canais)) / math.factorial(int(numero_canais))) / soma
+    return prob_bloqueio
+
+def erlang_b_numero_canais(trafego, prob_bloqueio):
+    numero_canais = 1
+    while True:
+        prob_bloqueio_calculado = 0
+        for n in range(numero_canais + 1):
+            prob_bloqueio_calculado += (int(trafego) ** n) / (math.factorial(n))
+        prob_bloqueio_calculado = ((int(trafego) ** numero_canais) / (math.factorial(numero_canais))) / prob_bloqueio_calculado
+        if prob_bloqueio_calculado <= int(prob_bloqueio):
+            break
+        numero_canais += 1
+    return numero_canais
+
+def erlang_b_tráfego(taxa_chegada, duração_média):
+    tráfego = int(taxa_chegada) * int(duração_média)
+    return tráfego

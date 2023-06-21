@@ -63,12 +63,23 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="{% url 'core:planeamento' %}" class="btn">Cobertura</a>
-                        <a href="{% url 'core:plan2' %}" class="btn">Planeamento Celular1</a>
+                        <a href="{% url 'core:planeamento' %}" class="btn">Cobertura-Frequencias</a>
+                        <a href="{% url 'core:plan2' %}" class="btn">Cobertura-Atenuação</a>
                         <a href="{% url 'core:plan3' %}" class="btn">Planeamento Celular2</a>
                     </div>
                 </div>
-                
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Tráfego
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'core:trafego' %}" class="btn">Teoria</a>
+                        <a href="{% url 'core:erlangB' %}" class="btn">Erlang B - Prob. Bloqueio</a>
+                        <a href="{% url 'core:canais' %}" class="btn">Canais</a>
+                        <a href="{% url 'core:calctraf' %}" class="btn">Tráfego</a>
+                    </div>
+                </div>
             </nav>
         </div>
 

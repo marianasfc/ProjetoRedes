@@ -33,7 +33,7 @@
     }
 
     .c {
-        width: 100%;
+        width: 90%;
         padding: 15px;
         background: #f0f0f5;
         box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
@@ -94,7 +94,11 @@
                         <br>
                         <label>frequência [MHz]: <input type="number" name="f"></label>
                         <br>
-                        <label>modelo de propagação: <input type="text" name="mod"></label>
+                        
+                        <select name="mod" required>
+                            <option value="Apenas Horizontal">Apenas Horizontal</option>
+                            <option value="Horizontal e Vertical">Horizontal e Vertical</option>
+                        </select>
                         <br>
                         <label>largura [m]: <input type="number" name="largura"></label>
                         <br>
@@ -102,12 +106,14 @@
                         <br>
                         <label>tamanho do pixel [m]: <input type="number" name="pixel"></label>
                         <br>
-                        <select name="antena">
-                            <option value="1">Directional Antennas</option>
-                            <option value="2">Omnidirectional Antennas</option>
-                            <option value="3">Indoor Antennas</option>
+                        <select id="antena" name="antena" required>
+                            <option value="Antena 1">Antena 1</option>
+                            <option value="Antena 2">Antena 2</option>
                         </select>
-                            <br>
+                        <br>
+                        <label>Azimute da Antena [graus]: <input type="number" name="azimute_antena"></label>
+                        <label>Altura da Antena [m]: <input type="number" name="altura_antena"></label>
+                        <label>ltura do Terminal de Recepção [m]: <input type="number" name="altura_terminal"></label>
                         <button type="submit" style="color: white;">Calcular</button>
                     </form>
                 </div>

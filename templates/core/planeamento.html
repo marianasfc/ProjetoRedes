@@ -91,16 +91,17 @@
         <div>
             <div class="duascolunas">
                 <div class="left">
-                    <h2>cobertura</h2>
+                    <h2>Cobertura - Frequências</h2>
                     <div class="c">
                         <form action="" method="POST">
                             {%csrf_token%}
-                            <label>frequência [MHz]: <input type="number" name="f"></label>
+                            <label>frequência [MHz]: <input type="text" name="f"></label>
                             <br>
-                            <label>distancia máxima: <input type="number" name="d"></label>
-                            <br>
-                            <label>Potencia transmitida [dBm]: <input type="number" name="ptx"></label>
-                            <br>
+                            <select name="c" required>
+                                <option value="espaço livre">Espaço livre</option>
+                                <option value="ambiente urbano">Ambiente urbano</option>
+                                <option value="indoor">Indoor</option>
+                            </select>
                             <button type="submit" style="color: white;">Calcular</button>
                         </form>
                     </div>
